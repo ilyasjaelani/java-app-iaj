@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-app-iaj
+  labels:
+    app: java-app-iaj
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-app-iaj
+  template:
+    metadata:
+      labels:
+        app: java-app-iaj
+    spec:
+      containers:
+      - image: ilyasjaelani/java-app-iaj:v1
+        name: java-app-iaj
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: java-app-iaj-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false" # Nonaktifkan redirect HTTPS (opsional)
+spec:
+  rules:
+  - host: java.lakewoodvilla.my.id # Ganti dengan domain/subdomain Anda
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: java-app-iaj
+            port:
+              number: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-app-iaj
+  labels:
+    app: java-app-iaj
+spec:
+  type: LoadBalancer
+  selector:
+    app: java-app-iaj
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+
