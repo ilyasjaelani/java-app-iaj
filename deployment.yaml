@@ -15,7 +15,7 @@ spec:
         app: java-app-iaj
     spec:
       containers:
-      - image: ilyasjaelani/java-app-iaj:v1
+      - image: registry.lmd.co.id/library/java-app-iaj:v1
         name: java-app-iaj
         ports:
         - containerPort: 8080
